@@ -1,0 +1,31 @@
+Description: use external pybind11
+ Upstream oxDNA intentionally uses an internal copy of pybind11.  This
+ patch changes cmake to use the system pybind11 instead.  It is not
+ planned for sending upstream, except possibly as a build option.
+ .
+ oxdna-cuda (3.4.2-1) unstable; urgency=medium
+ .
+   * Initial release (Closes: #1019890)
+Author: Constantine Evans <const@costi.eu>
+Last-Update: 2022-09-16
+
+--- oxdna-cuda-3.4.2.orig/oxpy/CMakeLists.txt
++++ oxdna-cuda-3.4.2/oxpy/CMakeLists.txt
+@@ -6,13 +6,15 @@ SET(oxpy_SOURCES
+ IF(Python)
+ 	# tell pybind11 to use python3
+ 	set(PYBIND11_PYTHON_VERSION 3 CACHE STRING "Python version to use for compiling modules")
+-	ADD_SUBDIRECTORY(pybind11)
++	
++	find_package(pybind11 REQUIRED)
++	
+ 	ADD_DEFINITIONS(-DPYTHON_BINDINGS)
+ 	
+ 	INCLUDE_DIRECTORIES( ${PYTHON_INCLUDE_DIRS} )
+ 	MESSAGE(STATUS "The detected Python's include dirs are: ${PYTHON_INCLUDE_DIRS}" )
+ 	
+-	INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/oxpy/pybind11/include )
++	INCLUDE_DIRECTORIES( /usr/include/pybind11 )
+ 	INCLUDE_DIRECTORIES( ${PROJECT_SOURCE_DIR}/src )
+ 	
+ 	MESSAGE(STATUS "Enabling Python bindings")

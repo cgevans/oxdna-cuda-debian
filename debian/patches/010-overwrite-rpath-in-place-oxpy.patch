@@ -1,0 +1,24 @@
+Description: "Installs" core.so in-place to change rpath
+ .
+ The upstream build process uses RPATH to allow oxpy to find
+ liboxdna_common, and this tends to add an RPATH to the build
+ directory, as oxpy.core is not installed via cmake.  This only
+ affects the Debian package, as the upstream has no installation
+ process.
+ .
+ oxdna-cuda (3.4.2-1) unstable; urgency=medium
+ .
+   * Initial release (Closes: #1019890)
+Author: Constantine Evans <const@costi.eu>
+
+--- oxdna-cuda-3.4.2.orig/oxpy/CMakeLists.txt
++++ oxdna-cuda-3.4.2/oxpy/CMakeLists.txt
+@@ -36,6 +36,8 @@ IF(Python)
+ 			SUFFIX ".so"
+ 			LIBRARY_OUTPUT_DIRECTORY "${OXPY_OUTPUT_DIR}"
+ 	)
++
++	INSTALL(TARGETS core LIBRARY DESTINATION "/")
+ 	
+ 	# copy the files required to install the library with Python's distutils
+ 	CONFIGURE_FILE(__init__.py

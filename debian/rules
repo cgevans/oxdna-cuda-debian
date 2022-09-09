@@ -1,0 +1,44 @@
+#!/usr/bin/make -f
+
+# export DH_VERBOSE = 1
+
+%:
+	dh $@ --buildsystem=cmake --with=python3,sphinxdoc
+
+
+
+override_dh_auto_test:
+
+override_dh_auto_build: export http_proxy=127.0.0.1:9
+override_dh_auto_build: export https_proxy=127.0.0.1:9
+override_dh_auto_build:
+	dh_auto_build
+	pandoc -f markdown -t man --standalone debian/oxDNA.md -o debian/oxDNA.1
+	pandoc -f markdown -t man --standalone debian/oat.md -o debian/oat.1
+	pandoc -f markdown -t man --standalone debian/DNAnalysis.md -o debian/DNAnalysis.1
+	pandoc -f markdown -t man --standalone debian/confGenerator.md -o debian/confGenerator.1
+
+
+override_dh_auto_install:
+	dh_auto_install
+	PYBUILD_NAME=oxdna-analysis-tools pybuild --install -d analysis
+	mv debian/tmp/core.so obj-${DEB_HOST_GNU_TYPE}/oxpy/python/oxpy/core.so
+	PYBUILD_NAME=oxpy pybuild --install -d obj-${DEB_HOST_GNU_TYPE}/oxpy/python/oxpy
+
+override_dh_sphinxdoc:
+	ln -sf /usr/share/javascript/jquery/jquery.js debian/oxdna-cuda/usr/share/doc/oxdna-cuda/html/_static/jquery.js
+	ln -sf /usr/share/javascript/jquery/jquery.js debian/oxdna-cuda/usr/share/doc/oxdna-cuda/html/_static/jquery-3.5.1.js
+	ln -sf /usr/share/javascript/underscore/underscore.js debian/oxdna-cuda/usr/share/doc/oxdna-cuda/html/_static/underscore.js
+	ln -sf /usr/share/javascript/sphinxdoc/1.0/searchtools.js debian/oxdna-cuda/usr/share/doc/oxdna-cuda/html/_static/searchtools.js
+	sed -i -e "s%https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js%/usr/share/javascript/mathjax/config/TeX-MML-AM_CHTML.js%" debian/oxdna-cuda/usr/share/doc/oxdna-cuda/html/*.html
+	#sed -i -e "s%https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js%/usr/share/javascript/mathjax/config/TeX-MML-AM_CHTML.js%" debian/oxdna-cuda/usr/share/doc/oxdna-cuda/html/oxpy/modules/core/*.html
+	dh_sphinxdoc -Xdoctools
+
+override_dh_auto_configure:
+	rm -rf src/extern/nlohmann
+	rm -rf oxpy/pybind11
+	dh_auto_configure -- -DCUDA=ON -DPython=ON -DCMAKE_BUILD_RPATH="/usr/lib/${DEB_HOST_MULTIARCH}/oxdna-cuda" -DCMAKE_INSTALL_RPATH="/usr/lib/${DEB_HOST_MULTIARCH}/oxdna-cuda" -DG=ON -DCUDA_COMMON_ARCH=ON -DNATIVE_COMPILATION=OFF -DCMAKE_C_COMPILER="gcc-10" -DCMAKE_CXX_COMPILER="g++-10"
+
+override_dh_installdocs:
+	cd docs && PYTHONPATH=../obj-${DEB_HOST_GNU_TYPE}/oxpy/python:../debian/python3-oxdna-analysis-tools/usr/lib/python3.10/dist-packages/ LD_LIBRARY_PATH=../obj-${DEB_HOST_GNU_TYPE}/src python3 -m sphinx -N -bhtml source build/html
+	dh_installdocs
