@@ -1,0 +1,35 @@
+Description: Allows external pybind11 use.
+ Part of this (fixing python_defs.h location) will be submitted upstream.
+ The remainder may be as well, as changes to the build process could allow
+ these paths to be used for both internal and extern pybind11.
+ .
+ oxdna-cuda (3.4.2-1) unstable; urgency=medium
+ .
+   * Initial release (Closes: #1019890)
+Author: Constantine Evans <const@costi.eu>
+Last-Update: 2022-09-16
+
+--- oxdna-cuda-3.4.2.orig/oxpy/bindings_includes/BaseBox.h
++++ oxdna-cuda-3.4.2/oxpy/bindings_includes/BaseBox.h
+@@ -8,7 +8,7 @@
+ #ifndef OXPY_BINDINGS_INCLUDES_FORCES_BASEBOX_H_
+ #define OXPY_BINDINGS_INCLUDES_FORCES_BASEBOX_H_
+ 
+-#include "../../python_defs.h"
++#include "../python_defs.h"
+ 
+ #include <Boxes/BaseBox.h>
+ 
+--- oxdna-cuda-3.4.2.orig/oxpy/bindings_includes/ConfigInfo.h
++++ oxdna-cuda-3.4.2/oxpy/bindings_includes/ConfigInfo.h
+@@ -10,8 +10,8 @@
+ 
+ #include <Utilities/ConfigInfo.h>
+ 
+-#include "../pybind11/include/pybind11/detail/common.h"
+-#include "../pybind11/include/pybind11/pybind11.h"
++#include "pybind11/detail/common.h"
++#include "pybind11/pybind11.h"
+ #include "../python_defs.h"
+ 
+ void export_ConfigInfo(py::module &m) {

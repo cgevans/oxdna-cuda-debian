@@ -1,0 +1,4 @@
+000-install-cmake.patch
+010-overwrite-rpath-in-place-oxpy.patch
+020-use-system-pybind11.patch
+025-fix-pybind11-includes.patch

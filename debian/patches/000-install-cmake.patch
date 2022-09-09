@@ -1,0 +1,19 @@
+Description: adds installation process to CMakeLists.txt
+ oxDNA does not have installation handled by cmake, only building, at
+ the moment.  This patch adds installation commands.
+ .
+ oxdna (3.4.2-1) unstable; urgency=medium
+ .
+   * Initial release (Closes: #nnnn)
+Author: Constantine Evans <const@costi.eu>
+Last-Update: 2022-09-15
+
+--- oxdna-3.4.2.orig/src/CMakeLists.txt
++++ oxdna-3.4.2/src/CMakeLists.txt
+@@ -335,3 +335,6 @@ TARGET_LINK_LIBRARIES(confGenerator ${li
+ # we add these executable as dependencies for the test targets
+ ADD_DEPENDENCIES(test_run ${exe_name} DNAnalysis confGenerator)
+ ADD_DEPENDENCIES(test_quick ${exe_name} DNAnalysis confGenerator)
++
++INSTALL(TARGETS ${exe_name} DNAnalysis confGenerator RUNTIME)
++INSTALL(TARGETS ${lib_name} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/oxdna-cuda)
