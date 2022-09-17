@@ -8,6 +8,7 @@ Description: Allows external pybind11 use.
    * Initial release (Closes: #1019890)
 Author: Constantine Evans <const@costi.eu>
 Last-Update: 2022-09-16
+Forwarded: https://github.com/lorenzo-rovigatti/oxDNA/pull/37
 
 --- oxdna-cuda-3.4.2.orig/oxpy/bindings_includes/BaseBox.h
 +++ oxdna-cuda-3.4.2/oxpy/bindings_includes/BaseBox.h

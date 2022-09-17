@@ -2,13 +2,13 @@ oxdna-cuda (3.4.2-1) unstable; urgency=medium
 
   * Initial release (Closes: #1019890)
   * Patched to use system pybind11-dev and nhlohmann-json3-dev.
-  * Still uses embedded copies of exprtk and fast_double_parsen in 
+  * Still uses embedded copies of exprtk and fast_double_parsen in
     src/extern. Both these are single headers, and are similarly
     embedded in other Debian packages.
   * Uses RPATH for a private shared library.  This is set during cmake
     installation of binaries, and by a bit of a roundabout method for
-    the oxpy Python package, 'installing' it and then moving it back 
-    into the build directory to be installed during the oxpy Python 
+    the oxpy Python package, 'installing' it and then moving it back
+    into the build directory to be installed during the oxpy Python
     package installation.
   * CUDA compilation should support architures 5.0, 5.2, 6.0, 6.1, 7.0,
     and 7.5.
